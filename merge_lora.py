@@ -20,7 +20,7 @@ assert os.path.exists(args.lora_model), f"模型文件{args.lora_model}不存在
 # 获取Lora配置参数
 peft_config = PeftConfig.from_pretrained(args.lora_model)
 # 获取Whisper的基本模型
-base_model = WhisperForConditionalGeneration.from_pretrained(peft_config.base_model_name_or_path, device_map={"": "cpu"},
+base_model = WhisperForConditionalGeneration.from_pretrained(peft_config.base_model_name_or_path, device_map="mps",
                                                              local_files_only=args.local_files_only)
 # 与Lora模型合并
 model = PeftModel.from_pretrained(base_model, args.lora_model, local_files_only=args.local_files_only)
@@ -42,7 +42,7 @@ save_directory = os.path.join(args.output_dir, f'{os.path.basename(peft_config.b
 os.makedirs(save_directory, exist_ok=True)
 
 # 保存模型到指定目录中
-model.save_pretrained(save_directory, max_shard_size='4GB')
+model.save_pretrained(save_directory, max_shard_size='4GB', safe_serialization=True)
 feature_extractor.save_pretrained(save_directory)
 tokenizer.save_pretrained(save_directory)
 processor.save_pretrained(save_directory)

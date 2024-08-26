@@ -46,7 +46,8 @@ def main():
                                                  local_files_only=args.local_files_only)
     # 获取模型
     model = WhisperForConditionalGeneration.from_pretrained(args.model_path,
-                                                            device_map="auto",
+                                                            device_map="mps",
+                                                            load_in_8bit=False,
                                                             local_files_only=args.local_files_only)
     model.generation_config.language = args.language.lower()
     model.eval()
@@ -69,12 +70,12 @@ def main():
 
     # 开始评估
     for step, batch in enumerate(tqdm(eval_dataloader)):
-        with torch.cuda.amp.autocast():
-            with torch.no_grad():
+        #with torch.amp.autocast("mps"):#with torch.cuda.amp.autocast():
+        with torch.no_grad():
                 generated_tokens = (
                     model.generate(
-                        input_features=batch["input_features"].cuda(),
-                        decoder_input_ids=batch["labels"][:, :4].cuda(),
+                        input_features=batch["input_features"].to("mps"),
+                        decoder_input_ids=batch["labels"][:, :4].to("mps"),
                         max_new_tokens=255).cpu().numpy())
                 labels = batch["labels"].cpu().numpy()
                 labels = np.where(labels != -100, labels, processor.tokenizer.pad_token_id)

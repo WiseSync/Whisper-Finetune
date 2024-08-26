@@ -291,7 +291,7 @@ if __name__ == '__main__':
     # 设置没有标注的位置静音
     set_silence()
     # 添加标点符号
-    if args.add_pun:
-        add_pun()
+    #if args.add_pun:
+    #    add_pun()
     # 转成二进制文件，减少内存占用
     create_binary()

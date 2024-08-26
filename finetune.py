@@ -72,7 +72,7 @@ def main():
     data_collator = DataCollatorSpeechSeq2SeqWithPadding(processor=processor)
 
     # 获取Whisper模型
-    device_map = "auto"
+    device_map = "mps"
     world_size = int(os.environ.get("WORLD_SIZE", 1))
     ddp = world_size != 1
     if ddp:
@@ -119,7 +119,7 @@ def main():
                                  warmup_steps=args.warmup_steps,  # 预热步数
                                  num_train_epochs=args.num_train_epochs,  # 微调训练轮数
                                  save_strategy="steps",  # 指定按照步数保存检查点
-                                 evaluation_strategy="steps",  # 指定按照步数评估模型
+                                 eval_strategy="steps",  # 指定按照步数评估模型
                                  load_best_model_at_end=True,  # 指定是否在结束时加载最优模型
                                  fp16=args.fp16,  # 是否使用半精度训练
                                  report_to=["tensorboard"],  # 指定使用tensorboard保存log
