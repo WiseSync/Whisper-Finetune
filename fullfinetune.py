@@ -136,10 +136,10 @@ def main():
                                  push_to_hub=args.push_to_hub,
                                  )
 
-    if training_args.local_rank == 0 or training_args.local_rank == -1:
-        print('=' * 90)
-        model.print_trainable_parameters()
-        print('=' * 90)
+    # if training_args.local_rank == 0 or training_args.local_rank == -1:
+    #     print('=' * 90)
+    #     model.print_trainable_parameters()
+    #     print('=' * 90)
 
     # 定义训练器
     trainer = Seq2SeqTrainer(args=training_args,
